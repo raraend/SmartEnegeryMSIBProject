@@ -1,3 +1,5 @@
+RE-CODE #2
+
 # Artificial Intelligence menggunakan Golang
 
 ## Final Project AI-Powered Smart Home Energy Management System
