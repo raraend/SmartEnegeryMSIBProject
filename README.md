@@ -1,4 +1,9 @@
 RE-CODE #2
+Past Problem: Only used TAPAS to retrieve raw data with a CLI-based UI, and had no access to GPT-2.
+Current Solution: 
+1. Still can't access gpt-2 cause not available,soooo...
+2. I Using TAPAS to query the table and generate answers, with manual recommendations based on energy consumption aggregation.
+
 
 # Artificial Intelligence menggunakan Golang
 
