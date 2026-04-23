@@ -1,13 +1,271 @@
-RE-CODE #2
-Past Problem: Only used TAPAS to retrieve raw data with a CLI-based UI, and had no access to GPT-2.
-Current Solution: 
-1. Still can't access gpt-2 cause not available,soooo...
-2. I Using TAPAS to query the table and generate answers, with manual recommendations based on energy consumption aggregation.
+# Final Project AI-Powered Smart Home Energy Management System RE-Code#1
 
 
-# Artificial Intelligence menggunakan Golang
+> Studi Independen Bersertifikat — Kampus Merdeka, Kemdikbudristek - Ruangguru
 
-## Final Project AI-Powered Smart Home Energy Management System
+![Kampus Merdeka](https://img.shields.io/badge/Kampus_Merdeka-Studi_Independen-blue)
+![Versi](https://img.shields.io/badge/versi-1.0.0-blue)
+![Go](https://img.shields.io/badge/Go-1.21-00ADD8?logo=go&logoColor=white)
+![AI](https://img.shields.io/badge/AI-TAPAS%20%2B%20-orange)
+![HuggingFace](https://img.shields.io/badge/HuggingFace-TAPAS-yellow?logo=huggingface&logoColor=black)
+![License](https://img.shields.io/badge/license-Academic-lightgrey)
+
+Aplikasi berbasis AI untuk menganalisis konsumsi energi rumah tangga dari data CSV dan memberikan rekomendasi penghematan secara otomatis. Dibangun menggunakan Go sebagai backend dan TAPAS (Google, via HuggingFace) sebagai model AI untuk query berbasis tabel. dikembangkan sebagai bagian dari program **Studi Independen Bersertifikat Kampus Merdeka, Kemdikbudristek**.
+
+> ## 🔄 Re-Code Evolution
+> ### Previous Version (ProjectRAW)
+> - Hanya menggunakan TAPAS
+> - Berbasis CLI sederhana
+> - Tidak ada interface Web
+> - Jawaban TAPAS masih mentah
+> - Tidak ada integrasi LLM lanjutan
+> - Pertanyaan rekomendasi tidak terbaca
+> - Lihat Repository projectRAW disini: https://github.com/raraend/MSIBProjectRAW
+> ### Current Version (Re-Code #1)
+> - Menggunakan TAPAS untuk query data tabel
+> - Berbasis Web Sederhana
+> - Pertanyaan Rekomendasi dapat di jawab berdasarkan aggregasi konsumsi energi per perangkat, status, dan ruangan
+> - Dapat mengUpload file CSV terpisah
+> ## Tantangan yang Dihadapi
+> - GPT-2 tidak tersedia via HuggingFace Inference API untuk kebutuhan project ini, jadi tidak bisa digunakan sebagai model percakapan.
+
+## Lihat Repository ReCode#2 disini: https://github.com/raraend/MSIBProject-ReCode_2.git sebagai bagian dari penyempurnaan project dan pengintegrasian Model AI Groq (Llama 3.1).
+
+---
+
+## Daftar Isi
+
+- [Demo](#demo)
+- [Fitur](#fitur)
+- [Tech Stack](#tech-stack)
+- [Arsitektur Sistem](#arsitektur-sistem)
+- [Cara Kerja AI](#cara-kerja-ai)
+- [Instalasi](#instalasi)
+- [Penggunaan](#penggunaan)
+- [Format CSV](#format-csv)
+- [Struktur Folder](#struktur-folder)
+- [Kontak](#kontak)
+
+---
+
+## Demo
+
+**Mode Web**
+- Tampilan upload file csv secara terpisah
+![alt text](image-3.png)
+
+- Tampilan saat file csv terupload dan data terbaca
+![alt text](image-4.png)
+
+- Tampilan saat pertanyaan terjawab
+![alt text](image-5.png)
+
+- Tampilan rekomendasi yang menghitung aggregasi secara manual
+![alt text](image-2.png)
+
+---
+
+## Fitur
+
+- **Upload file CSV** langsung dari browser
+- **Tanya jawab natural** berbasis data tabel menggunakan TAPAS
+- **Rekomendasi otomatis** berdasarkan aggregasi konsumsi energi per perangkat, status, dan ruangan
+- **Web Interface** — diakses melalui browser, tidak perlu CLI
+- **Fallback handling** — menampilkan pesan error yang informatif jika koneksi ke API gagal
+- **Dukungan aggregasi** — SUM, COUNT, dan lookup langsung
+
+---
+
+## Tech Stack
+
+**AI**
+
+![TAPAS](https://img.shields.io/badge/TAPAS-google%2Ftapas--base--finetuned--wtq-yellow?logo=huggingface&logoColor=black)
+
+**API**
+
+![HuggingFace](https://img.shields.io/badge/HuggingFace-Inference_API-yellow?logo=huggingface&logoColor=black)
+
+**Frontend (Web Mode)**
+
+![HTML5](https://img.shields.io/badge/HTML5-E34F26?logo=html5&logoColor=white)
+![CSS3](https://img.shields.io/badge/CSS3-1572B6?logo=css3&logoColor=white)
+![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?logo=javascript&logoColor=black)
+
+**Backend**
+
+![Go](https://img.shields.io/badge/Go-00ADD8?logo=go&logoColor=white)
+
+
+
+---
+
+## Cara Kerja
+
+```
+User Input (pertanyaan)
+        │
+        ▼
+┌──────────────────────┐
+│  TAPAS (HuggingFace) │  ← query dikirim bersama tabel CSV
+│  Jawab dari tabel    │
+└──────────┬───────────┘
+           │
+           ├── Aggregator: SUM  → hitung total kWh
+           ├── Aggregator: COUNT → hitung jumlah item
+           └── Aggregator: NONE  → lookup langsung
+                    │
+                    ▼
+        ┌────────────────────┐
+        │  Rule-based Engine │  ← rekomendasi dari kode Go
+        │  (generateRecomm.) │
+        └────────────────────┘
+                    │
+                    ▼
+             Response ke Browser
+```
+
+**Rule-based Recommendation Logic:**
+- Perangkat dengan konsumsi > 10 kWh → peringatan kritis 
+- Perangkat dengan konsumsi > 5 kWh → saran pembatasan 
+- Lebih dari 5 perangkat menyala bersamaan → peringatan 
+- Ruangan dengan konsumsi > 8 kWh → saran audit 
+
+---
+
+##  Instalasi
+
+### Prasyarat
+- Go `>= 1.21`
+- Akun HuggingFace dengan API token aktif
+
+### Langkah
+
+```bash
+# 1. Clone repositori
+git clone https://github.com/raraend/MSIBProject_ReCode_1.git
+cd MSIBProject_ReCode_1
+
+# 2. Install dependensi
+go mod tidy
+
+# 3. Buat file .env
+cp .env.example .env
+```
+
+Isi file `.env`:
+```env
+HUGGINGFACE_TOKEN=hf_xxxxxxxxxxxxxxxxxxxxxxxx
+```
+
+Dapatkan token di: https://huggingface.co/settings/tokens
+
+```bash
+# 4. Jalankan server
+go run main.go
+```
+
+Buka browser dan akses: **http://localhost:8080**
+
+---
+
+## Format CSV
+
+File CSV yang diunggah harus memiliki kolom berikut:
+
+| Kolom | Tipe | Keterangan |
+|-------|------|------------|
+| `Date` | string | Tanggal pencatatan |
+| `Appliance` | string | Nama perangkat (AC, TV, dll.) |
+| `Room` | string | Ruangan tempat perangkat berada |
+| `Status` | string | `On` atau `Off` |
+| `Energy_Consumption` | float | Konsumsi energi dalam kWh |
+
+### Contoh Isi CSV
+
+```csv
+Date,Appliance,Room,Status,Energy_Consumption
+2024-01-01,AC,Bedroom,On,1.5
+2024-01-01,TV,Living Room,On,0.3
+2024-01-01,Refrigerator,Kitchen,On,0.8
+2024-01-02,AC,Bedroom,Off,0.0
+2024-01-02,Washing Machine,Bathroom,On,2.1
+```
+
+---
+
+## Contoh Pertanyaan
+
+Pertanyaan-pertanyaan ini dapat diajukan melalui Web Interface setelah CSV diunggah:
+
+```
+What is the total energy consumption?
+Which appliance uses the most energy?
+How many times was the AC turned on?
+What is the energy consumption of the TV?
+How many appliances are currently on?
+```
+
+### Contoh Output
+
+```
+Pertanyaan : What is the total energy consumption?
+Jawaban    : 4.70 kWh
+Aggregator : SUM
+
+Rekomendasi:
+AC mengonsumsi 12.30 kWh — sangat tinggi, segera periksa atau matikan.
+TV mengonsumsi 6.20 kWh — pertimbangkan untuk membatasi penggunaannya.
+Konsumsi ruangan lain dalam batas normal.
+```
+
+---
+
+##  Struktur Folder
+
+```
+MSIBProject_ReCode_1/
+├── main.go              # Entry point — handler & logika utama
+├── templates/
+│   └── index.html       # Halaman web (UI)
+├── data-series.csv      # Contoh file CSV
+├── .env                 # API keys (tidak di-commit)
+├── .env.example         # Template .env
+├── go.mod
+├── go.sum
+└── README.md
+```
+
+---
+
+##  Rencana Re-Code #2
+
+Versi berikutnya akan mengatasi keterbatasan Re-Code #1 dengan:
+
+- Integrasi **Groq (LLaMA 3.1)** sebagai AI Router dan Recommendation Engine
+- Mengganti rule-based recommendation dengan **rekomendasi berbasis LLM** yang lebih natural
+- Dukungan **CLI mode** di samping Web Interface
+- **Fallback mechanism** otomatis dari TAPAS ke Groq
+---
+
+## 👤 Kontak
+
+**Rara Eva Maharani**
+- Email: raarevamaharani@gmail.com
+- GitHub: [@raraend](https://github.com/raraend)
+
+---
+
+*Repositori ini dikembangkan sebagai bagian dari program Studi Independen Bersertifikat Kampus Merdeka, Kemdikbudristek — 2025.*
+
+<br>
+<br>
+<br>
+<br>
+
+# README LAMA BERISI FLOW PENGERJAAN DARI RUANGGURU
+
+## Artificial Intelligence menggunakan Golang Final Project AI-Powered Smart Home Energy Management System
 
 ### Description
 
